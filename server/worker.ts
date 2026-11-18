@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { makeApp, CSP, type Bindings } from "./app";
+declare const __HTML_PAGES__: Record<string, string>;
 const app = makeApp((env) => {
   if (!env.DATABASE_URL) throw new Error("Database is not configured");
   const sql = neon(env.DATABASE_URL);
@@ -16,13 +17,21 @@ export default {
     let result: Response;
     if (url.pathname.startsWith("/api/"))
       result = await app.fetch(request, env);
+    else if (Object.hasOwn(__HTML_PAGES__, url.pathname))
+      result = new Response(__HTML_PAGES__[url.pathname], {
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      });
     else if (env.ASSETS) result = await env.ASSETS.fetch(request);
-    else result = new Response("Static assets not configured", { status: 503 });
+    else result = new Response("Page not found", { status: 404 });
     const response = new Response(result.body, result);
     response.headers.set("Content-Security-Policy", CSP);
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()",
+    );
     return response;
   },
 };

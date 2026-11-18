@@ -33,6 +33,7 @@ jobs:
       - run: python scripts/verify.py
       - run: npm test
       - run: npm run build
+      - run: node tests/worker.test.mjs
       - run: npm audit --audit-level=high
       - uses: actions/upload-artifact@v4
         with:

@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { mkdir, readFile, writeFile, cp, rm } from "node:fs/promises";
+import { mkdir, readFile, writeFile, cp, rm, readdir } from "node:fs/promises";
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist/client/assets", { recursive: true });
 await build({
@@ -17,12 +17,21 @@ html = html.replace(
   '<script type="module" src="/src/main.tsx"></script>',
   '<link rel="stylesheet" href="/assets/app.css"/><script type="module" src="/assets/app.js"></script>',
 );
-await writeFile("dist/client/index.html", html);
 try {
   await cp("public", "dist/client", { recursive: true });
 } catch (e) {
   if (e.code !== "ENOENT") throw e;
 }
+// Route HTML through the Worker so the hosting asset fast path cannot bypass
+// document security headers. CSS, JS and evidence remain ordinary static assets.
+const pages = { "/": html, "/index.html": html };
+for (const entry of await readdir("dist/client", { recursive: true })) {
+  if (!entry.endsWith(".html")) continue;
+  pages["/" + entry] = await readFile("dist/client/" + entry, "utf8");
+  await rm("dist/client/" + entry);
+}
+await mkdir("dist/server", { recursive: true });
+await writeFile("dist/server/pages.json", JSON.stringify(pages));
 await build({
   entryPoints: ["server/worker.ts"],
   bundle: true,
@@ -30,5 +39,6 @@ await build({
   platform: "browser",
   target: "es2022",
   outfile: "dist/server/index.js",
+  define: { __HTML_PAGES__: JSON.stringify(pages) },
 });
 console.log("Client assets and Cloudflare Worker built.");

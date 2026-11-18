@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T16:24:29.502244+00:00",
+  "generated_at": "2026-11-18T16:28:04.127833+00:00",
   "release": "0.1.0",
   "data_version": "ca930db9b5cfd6ac",
   "data": {
@@ -64,7 +64,7 @@
     "source_duplicate_review_ids": 814
   },
   "security": {
-    "executedAt": "2026-11-18T16:24:04.649Z",
+    "executedAt": "2026-11-18T16:24:31.374Z",
     "passed": 18,
     "checks": [
       {
@@ -4415,7 +4415,8 @@
     "pbix_bytes": 30494563,
     "visual_review": {
       "sales_overview": "verified after reopen",
-      "remaining_pages": "schema validated; visual review pending"
+      "delivery_reviews": "verified after reopen",
+      "definitions_coverage": "verified after reopen"
     }
   }
 }

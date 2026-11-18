@@ -35,6 +35,7 @@
   "pbix_bytes": 30494563,
   "visual_review": {
     "sales_overview": "verified after reopen",
-    "remaining_pages": "schema validated; visual review pending"
+    "delivery_reviews": "verified after reopen",
+    "definitions_coverage": "verified after reopen"
   }
 }

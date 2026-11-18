@@ -1,0 +1,64 @@
+[
+  {
+    "id": "monthly-trends",
+    "name": "Monthly activity and delivered merchandise value",
+    "text": "SELECT to_char(purchase_date,'YYYY-MM') AS month,count(*)::int AS orders,count(*) FILTER(WHERE status='delivered')::int AS delivered_orders,sum(merchandise_value) FILTER(WHERE status='delivered')::text AS merchandise_value,sum(freight_value) FILTER(WHERE status='delivered')::text AS freight_value,count(*) FILTER(WHERE late IS TRUE)::int AS late_orders,count(late)::int AS eligible_deliveries,round(avg(review_score)::numeric,3)::text AS review_score,count(review_score)::int AS reviewed_orders FROM api.orders WHERE purchase_date >= $1::date AND purchase_date <= $2::date AND ($3='ALL' OR state=$3) GROUP BY 1 ORDER BY 1",
+    "values": [
+      "2017-11-01",
+      "2017-11-07",
+      "SP"
+    ]
+  },
+  {
+    "id": "order-search",
+    "name": "Orders by purchase date, region, status and city",
+    "text": "SELECT order_id,customer_key,purchased_at::text,status,city,state,item_count,merchandise_value::text,freight_value::text,late,review_score FROM api.orders WHERE purchase_date >= $1::date AND purchase_date <= $2::date AND ($3='ALL' OR state=$3) AND ($4='all' OR status=$4) AND ($5='' OR strpos(lower(city),lower($5))>0) ORDER BY purchased_at DESC, order_id LIMIT $6 OFFSET $7",
+    "values": [
+      "2017-11-01",
+      "2017-11-07",
+      "SP",
+      "all",
+      "",
+      25,
+      0
+    ]
+  },
+  {
+    "id": "order-detail",
+    "name": "One order, with separately aggregated items and payments",
+    "text": "SELECT o.order_id,o.customer_key,o.status,o.state,o.city,o.item_count,o.purchased_at::text,o.delivered_at::text,o.estimated_at::text,o.merchandise_value::text,o.freight_value::text,o.payment_value::text,o.review_score,o.late,coalesce((SELECT jsonb_agg(jsonb_build_object('sequence',i.item_sequence,'category',i.category_name,'seller_id',i.seller_id,'price',i.price::text,'freight',i.freight::text) ORDER BY i.item_sequence) FROM api.items i WHERE i.order_id=o.order_id),'[]'::jsonb) AS items,coalesce((SELECT jsonb_agg(jsonb_build_object('sequence',p.payment_sequence,'type',p.payment_type,'installments',p.installments,'amount',p.amount::text) ORDER BY p.payment_sequence) FROM api.payments p WHERE p.order_id=o.order_id),'[]'::jsonb) AS payments FROM api.orders o WHERE order_id=$1",
+    "values": [
+      "10a045cdf6a5650c21e9cfeb60384c16"
+    ]
+  },
+  {
+    "id": "customer-history",
+    "name": "Order history for one repeat-customer identity",
+    "text": "SELECT order_id,purchased_at::text,status,state,item_count,merchandise_value::text,late FROM api.orders WHERE customer_key=$1 ORDER BY purchased_at DESC,order_id LIMIT $2",
+    "values": [
+      "87ab9fec999db8bd5774917de3cdf01c",
+      25
+    ]
+  },
+  {
+    "id": "seller-categories",
+    "name": "Delivered merchandise value by seller and category",
+    "text": "SELECT seller_id,category_name,count(DISTINCT order_id)::int AS orders,count(*)::int AS items,sum(price)::text AS merchandise_value FROM api.items WHERE purchase_date >= $1::date AND purchase_date <= $2::date AND ($3='ALL' OR state=$3) AND status='delivered' GROUP BY seller_id,category_name ORDER BY sum(price) DESC,seller_id,category_name LIMIT $4",
+    "values": [
+      "2017-11-01",
+      "2017-11-07",
+      "SP",
+      25
+    ]
+  },
+  {
+    "id": "delivery-summary",
+    "name": "Delivery performance and latest-review coverage by state",
+    "text": "SELECT state,count(*)::int AS orders,count(*) FILTER(WHERE status='delivered')::int AS delivered_orders,count(late)::int AS eligible_deliveries,count(*) FILTER(WHERE late IS TRUE)::int AS late_orders,round(avg(delivery_days),2)::text AS delivery_days,round(avg(review_score)::numeric,3)::text AS review_score,count(review_score)::int AS reviewed_orders FROM api.orders WHERE purchase_date >= $1::date AND purchase_date <= $2::date AND ($3='ALL' OR state=$3) GROUP BY state ORDER BY count(*) DESC,state",
+    "values": [
+      "2017-11-01",
+      "2017-11-07",
+      "SP"
+    ]
+  }
+]

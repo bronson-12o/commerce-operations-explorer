@@ -1,0 +1,40 @@
+name: Verify application and database
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: commerce
+          POSTGRES_USER: commerce_owner
+          POSTGRES_PASSWORD: isolated_ci_password
+        ports: ["5483:5432"]
+        options: >-
+          --health-cmd "pg_isready -U commerce_owner -d commerce"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: pip install -r requirements.txt
+      - name: Configure disposable local test database
+        run: |
+          python -c 'from pathlib import Path;Path(".env").write_text("POSTGRES_PASSWORD=isolated_ci_password\nREADER_PASSWORD=isolated_reader_password\nOWNER_DATABASE_URL=postgresql://commerce_owner:isolated_ci_password@127.0.0.1:5483/commerce\nDATABASE_URL=postgresql://commerce_reader:isolated_reader_password@127.0.0.1:5483/commerce\n")'
+      - run: python scripts/download_data.py
+      - run: python scripts/pipeline.py
+      - run: python scripts/verify.py
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=high
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verification-evidence
+          path: evidence/

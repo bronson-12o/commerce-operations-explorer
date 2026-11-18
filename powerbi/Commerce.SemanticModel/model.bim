@@ -1,0 +1,808 @@
+{
+  "name": "Commerce Operations Explorer",
+  "compatibilityLevel": 1600,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "expressions": [
+      {
+        "name": "SourceFolder",
+        "kind": "m",
+        "expression": "\"C:\\Users\\Bronson\\Documents\\CommerceExplorer\\data\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "tables": [
+      {
+        "name": "Orders",
+        "columns": [
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "customer_key",
+            "dataType": "string",
+            "sourceColumn": "customer_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "geography_key",
+            "dataType": "string",
+            "sourceColumn": "geography_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "status",
+            "dataType": "string",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "purchased_at",
+            "dataType": "dateTime",
+            "sourceColumn": "purchased_at",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "purchase_date",
+            "dataType": "dateTime",
+            "sourceColumn": "purchase_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "delivery_date",
+            "dataType": "dateTime",
+            "sourceColumn": "delivery_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "estimated_date",
+            "dataType": "dateTime",
+            "sourceColumn": "estimated_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "delivered_at",
+            "dataType": "dateTime",
+            "sourceColumn": "delivered_at",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "estimated_at",
+            "dataType": "dateTime",
+            "sourceColumn": "estimated_at",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "item_count",
+            "dataType": "int64",
+            "sourceColumn": "item_count",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "merchandise_value",
+            "dataType": "decimal",
+            "sourceColumn": "merchandise_value",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "freight_value",
+            "dataType": "decimal",
+            "sourceColumn": "freight_value",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "payment_value",
+            "dataType": "decimal",
+            "sourceColumn": "payment_value",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "late",
+            "dataType": "boolean",
+            "sourceColumn": "late",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "delivery_days",
+            "dataType": "decimal",
+            "sourceColumn": "delivery_days",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "review_score",
+            "dataType": "int64",
+            "sourceColumn": "review_score",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_count",
+            "dataType": "int64",
+            "sourceColumn": "review_count",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Orders",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\fact_order.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {\"purchased_at\", \"purchase_date\", \"delivery_date\", \"estimated_date\", \"delivered_at\", \"estimated_at\", \"item_count\", \"merchandise_value\", \"freight_value\", \"payment_value\", \"late\", \"delivery_days\", \"review_score\", \"review_count\"}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"order_id\", type text}, {\"customer_key\", type text}, {\"geography_key\", type text}, {\"status\", type text}, {\"purchased_at\", type datetime}, {\"purchase_date\", type date}, {\"delivery_date\", type date}, {\"estimated_date\", type date}, {\"delivered_at\", type datetime}, {\"estimated_at\", type datetime}, {\"item_count\", Int64.Type}, {\"merchandise_value\", Currency.Type}, {\"freight_value\", Currency.Type}, {\"payment_value\", Currency.Type}, {\"late\", type logical}, {\"delivery_days\", Currency.Type}, {\"review_score\", Int64.Type}, {\"review_count\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Order Count",
+            "expression": "COUNTROWS(Orders)",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Delivered Orders",
+            "expression": "CALCULATE(COUNTROWS(Orders), Orders[status] = \"delivered\")",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Delivered Merchandise Value",
+            "expression": "CALCULATE(SUM(Orders[merchandise_value]), Orders[status] = \"delivered\")",
+            "formatString": "\"R$\" #,0.00"
+          },
+          {
+            "name": "Delivered Freight Value",
+            "expression": "CALCULATE(SUM(Orders[freight_value]), Orders[status] = \"delivered\")",
+            "formatString": "\"R$\" #,0.00"
+          },
+          {
+            "name": "Average Order Value",
+            "expression": "DIVIDE([Delivered Merchandise Value], [Delivered Orders])",
+            "formatString": "\"R$\" #,0.00"
+          },
+          {
+            "name": "Eligible Deliveries",
+            "expression": "COUNTROWS(FILTER(Orders, NOT ISBLANK(Orders[late])))",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Late Orders",
+            "expression": "COUNTROWS(FILTER(Orders, Orders[late] == TRUE()))",
+            "formatString": "#,0"
+          },
+          {
+            "name": "On Time Rate",
+            "expression": "DIVIDE([Eligible Deliveries] - [Late Orders], [Eligible Deliveries])",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Average Delivery Days",
+            "expression": "AVERAGE(Orders[delivery_days])",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Latest Review Score",
+            "expression": "AVERAGE(Orders[review_score])",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Reviewed Orders",
+            "expression": "COUNT(Orders[review_score])",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Category Merchandise Value",
+            "expression": "CALCULATE(SUM(OrderItems[price]), OrderItems[status] = \"delivered\")",
+            "formatString": "\"R$\" #,0.00"
+          },
+          {
+            "name": "Dataset Period",
+            "expression": "\"Historical Olist commerce records | 2016\u20132018 | BRL\""
+          },
+          {
+            "name": "Metric Definition",
+            "expression": "\"Merchandise value excludes freight. Delivered orders only. Not platform revenue or profit.\""
+          },
+          {
+            "name": "Delivery Definition",
+            "expression": "\"Late = delivered calendar date after estimated calendar date. Missing dates are excluded.\""
+          },
+          {
+            "name": "Review Definition",
+            "expression": "\"Latest answered review per order; creation timestamp and source row break ties. Descriptive, not causal.\""
+          },
+          {
+            "name": "Source Attribution",
+            "expression": "\"Data: Olist on Kaggle | CC BY-NC-SA 4.0 | Independent project by Bronson Hatch\""
+          }
+        ]
+      },
+      {
+        "name": "OrderItems",
+        "columns": [
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "item_sequence",
+            "dataType": "int64",
+            "sourceColumn": "item_sequence",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "product_id",
+            "dataType": "string",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "seller_id",
+            "dataType": "string",
+            "sourceColumn": "seller_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "shipping_limit_at",
+            "dataType": "dateTime",
+            "sourceColumn": "shipping_limit_at",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "price",
+            "dataType": "decimal",
+            "sourceColumn": "price",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "freight",
+            "dataType": "decimal",
+            "sourceColumn": "freight",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "customer_key",
+            "dataType": "string",
+            "sourceColumn": "customer_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "geography_key",
+            "dataType": "string",
+            "sourceColumn": "geography_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "purchase_date",
+            "dataType": "dateTime",
+            "sourceColumn": "purchase_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "status",
+            "dataType": "string",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "OrderItems",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\fact_order_item.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {\"item_sequence\", \"shipping_limit_at\", \"price\", \"freight\", \"purchase_date\"}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"order_id\", type text}, {\"item_sequence\", Int64.Type}, {\"product_id\", type text}, {\"seller_id\", type text}, {\"shipping_limit_at\", type datetime}, {\"price\", Currency.Type}, {\"freight\", Currency.Type}, {\"customer_key\", type text}, {\"geography_key\", type text}, {\"purchase_date\", type date}, {\"status\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Payments",
+        "columns": [
+          {
+            "name": "order_id",
+            "dataType": "string",
+            "sourceColumn": "order_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "payment_sequence",
+            "dataType": "int64",
+            "sourceColumn": "payment_sequence",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "payment_type",
+            "dataType": "string",
+            "sourceColumn": "payment_type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "installments",
+            "dataType": "int64",
+            "sourceColumn": "installments",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "amount",
+            "dataType": "decimal",
+            "sourceColumn": "amount",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          },
+          {
+            "name": "customer_key",
+            "dataType": "string",
+            "sourceColumn": "customer_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "geography_key",
+            "dataType": "string",
+            "sourceColumn": "geography_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "purchase_date",
+            "dataType": "dateTime",
+            "sourceColumn": "purchase_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Payments",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\fact_payment.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {\"payment_sequence\", \"installments\", \"amount\", \"purchase_date\"}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"order_id\", type text}, {\"payment_sequence\", Int64.Type}, {\"payment_type\", type text}, {\"installments\", Int64.Type}, {\"amount\", Currency.Type}, {\"customer_key\", type text}, {\"geography_key\", type text}, {\"purchase_date\", type date}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dates",
+        "columns": [
+          {
+            "name": "date_key",
+            "dataType": "dateTime",
+            "sourceColumn": "date_key",
+            "summarizeBy": "none",
+            "formatString": "yyyy-mm-dd"
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "month",
+            "dataType": "int64",
+            "sourceColumn": "month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "year_month",
+            "dataType": "string",
+            "sourceColumn": "year_month",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dates",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_date.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {\"date_key\", \"year\", \"month\"}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"date_key\", type date}, {\"year\", Int64.Type}, {\"month\", Int64.Type}, {\"year_month\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Customers",
+        "columns": [
+          {
+            "name": "customer_key",
+            "dataType": "string",
+            "sourceColumn": "customer_key",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Customers",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_customer.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"customer_key\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Products",
+        "columns": [
+          {
+            "name": "product_id",
+            "dataType": "string",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "category_key",
+            "dataType": "string",
+            "sourceColumn": "category_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "category_name",
+            "dataType": "string",
+            "sourceColumn": "category_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "weight_g",
+            "dataType": "decimal",
+            "sourceColumn": "weight_g",
+            "summarizeBy": "none",
+            "formatString": "0.00"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Products",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_product.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {\"weight_g\"}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"product_id\", type text}, {\"category_key\", type text}, {\"category_name\", type text}, {\"weight_g\", Currency.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Sellers",
+        "columns": [
+          {
+            "name": "seller_id",
+            "dataType": "string",
+            "sourceColumn": "seller_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "zip_prefix",
+            "dataType": "string",
+            "sourceColumn": "zip_prefix",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "city",
+            "dataType": "string",
+            "sourceColumn": "city",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Sellers",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_seller.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"seller_id\", type text}, {\"zip_prefix\", type text}, {\"city\", type text}, {\"state\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Geography",
+        "columns": [
+          {
+            "name": "geography_key",
+            "dataType": "string",
+            "sourceColumn": "geography_key",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "city",
+            "dataType": "string",
+            "sourceColumn": "city",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "zip_prefix",
+            "dataType": "string",
+            "sourceColumn": "zip_prefix",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Geography",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_geography.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"geography_key\", type text}, {\"state\", type text}, {\"city\", type text}, {\"zip_prefix\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "PaymentTypes",
+        "columns": [
+          {
+            "name": "payment_type",
+            "dataType": "string",
+            "sourceColumn": "payment_type",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "PaymentTypes",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_payment_type.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"payment_type\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "OrderStatuses",
+        "columns": [
+          {
+            "name": "status",
+            "dataType": "string",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "OrderStatuses",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(SourceFolder & \"\\dim_order_status.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Missing = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, {}),",
+                "    Typed = Table.TransformColumnTypes(Missing, {{\"status\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "1c596884-2f54-56c9-b594-786265a02362",
+        "fromTable": "Orders",
+        "fromColumn": "purchase_date",
+        "toTable": "Dates",
+        "toColumn": "date_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "13d213cd-8754-56e1-a6e9-edf9504a3797",
+        "fromTable": "Orders",
+        "fromColumn": "customer_key",
+        "toTable": "Customers",
+        "toColumn": "customer_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "ef639e92-07e5-5f86-8b6a-d4228c321d39",
+        "fromTable": "Orders",
+        "fromColumn": "geography_key",
+        "toTable": "Geography",
+        "toColumn": "geography_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "a698ae85-3d74-5f44-ab57-45a0a023e223",
+        "fromTable": "OrderItems",
+        "fromColumn": "purchase_date",
+        "toTable": "Dates",
+        "toColumn": "date_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "8ae99600-0955-5c66-98c7-3930bfbef07d",
+        "fromTable": "OrderItems",
+        "fromColumn": "customer_key",
+        "toTable": "Customers",
+        "toColumn": "customer_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "253b296f-189d-5147-ab52-9b75f3c63b73",
+        "fromTable": "OrderItems",
+        "fromColumn": "geography_key",
+        "toTable": "Geography",
+        "toColumn": "geography_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "eca9599c-0b4c-56be-b35c-e90494e7b3de",
+        "fromTable": "Payments",
+        "fromColumn": "purchase_date",
+        "toTable": "Dates",
+        "toColumn": "date_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "0c1196a6-69a1-55b7-bb98-39560b35d39d",
+        "fromTable": "Payments",
+        "fromColumn": "customer_key",
+        "toTable": "Customers",
+        "toColumn": "customer_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "f5b37bd2-225a-5822-9d0d-ec37fa7d2e4c",
+        "fromTable": "Payments",
+        "fromColumn": "geography_key",
+        "toTable": "Geography",
+        "toColumn": "geography_key",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "92d3b684-ea1d-5e29-a5d6-8e420ae75ceb",
+        "fromTable": "OrderItems",
+        "fromColumn": "product_id",
+        "toTable": "Products",
+        "toColumn": "product_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "2515ab8b-3205-501b-b10b-146bbc3d8ee6",
+        "fromTable": "OrderItems",
+        "fromColumn": "seller_id",
+        "toTable": "Sellers",
+        "toColumn": "seller_id",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "88b796e9-5f58-50e3-b9d0-26a8ac6b9f7f",
+        "fromTable": "Payments",
+        "fromColumn": "payment_type",
+        "toTable": "PaymentTypes",
+        "toColumn": "payment_type",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "2bb08d1e-97c9-5ce4-82d2-4fedab2ff572",
+        "fromTable": "Orders",
+        "fromColumn": "status",
+        "toTable": "OrderStatuses",
+        "toColumn": "status",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "a432468f-9f6d-57ec-8048-856732510a6c",
+        "fromTable": "Orders",
+        "fromColumn": "delivery_date",
+        "toTable": "Dates",
+        "toColumn": "date_key",
+        "isActive": false,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "57fb15dc-f77b-5036-81ee-7bac0586a05b",
+        "fromTable": "Orders",
+        "fromColumn": "estimated_date",
+        "toTable": "Dates",
+        "toColumn": "date_key",
+        "isActive": false,
+        "crossFilteringBehavior": "oneDirection"
+      }
+    ]
+  }
+}

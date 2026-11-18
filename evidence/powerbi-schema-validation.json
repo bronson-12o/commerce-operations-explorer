@@ -1,0 +1,33 @@
+{
+  "files": [
+    "powerbi/Commerce.Report/definition/version.json",
+    "powerbi/Commerce.Report/definition/report.json",
+    "powerbi/Commerce.Report/definition/pages/pages.json",
+    "powerbi/Commerce.Report/definition/pages/sales/page.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/page.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/page.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/metric1/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/metric0/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/context/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/trend/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/metric2/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/metric3/visual.json",
+    "powerbi/Commerce.Report/definition/pages/sales/visuals/categories/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/metric1/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/metric0/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/regions/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/context/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/metric2/visual.json",
+    "powerbi/Commerce.Report/definition/pages/delivery/visuals/metric3/visual.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/visuals/context/visual.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/visuals/definition3/visual.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/visuals/definition2/visual.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/visuals/definition0/visual.json",
+    "powerbi/Commerce.Report/definition/pages/definitions/visuals/definition1/visual.json",
+    "powerbi/Commerce.Report/definition.pbir",
+    "powerbi/Commerce.SemanticModel/definition.pbism",
+    "powerbi/Commerce Operations Explorer.pbip"
+  ],
+  "passed": 27,
+  "desktop_verification": false
+}

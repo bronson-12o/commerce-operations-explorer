@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "name": "CSV count and exact-cent merchandise/freight controls",
+      "passed": true,
+      "detail": [
+        "99441",
+        "96478",
+        "13221498.11",
+        "2198275.64"
+      ]
+    },
+    {
+      "name": "150 seeded independent per-order sums",
+      "passed": true,
+      "detail": {
+        "orders": 150
+      }
+    },
+    {
+      "name": "Independent filtered total: 2016/SP",
+      "passed": true,
+      "detail": "12046.03"
+    },
+    {
+      "name": "Independent filtered total: 2017/RJ",
+      "passed": true,
+      "detail": "876499.71"
+    },
+    {
+      "name": "Independent filtered total: 2018/MG",
+      "passed": true,
+      "detail": "840172.20"
+    },
+    {
+      "name": "Fact row counts preserve source grains",
+      "passed": true,
+      "detail": {
+        "core.orders": 99441,
+        "analytics.fact_order": 99441,
+        "analytics.fact_order_item": 112650,
+        "analytics.fact_payment": 103886
+      }
+    },
+    {
+      "name": "Constraint failure rolls back preceding transaction changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Delivery denominator and calendar-date late rule",
+      "passed": true,
+      "detail": {
+        "eligible": 96470,
+        "late": 6534
+      }
+    }
+  ],
+  "database_bytes": 473003711,
+  "source_duplicate_review_ids": 814
+}

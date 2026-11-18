@@ -1,0 +1,33 @@
+{
+  "name": "commerce-operations-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && npm run api",
+    "api": "tsx --env-file=.env server/local.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && node scripts/build.mjs",
+    "test": "tsx --env-file=.env --test tests/api.test.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.9",
+    "@neondatabase/serverless": "^1.2.1",
+    "hono": "^4.13.19",
+    "lucide-react": "^1.75.0",
+    "pg": "^8.23.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "prettier": "^3.10.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

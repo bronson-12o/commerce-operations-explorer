@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+data/raw/
+data/quarantine/
+data/backups/
+evidence/private/
+playwright-report/
+test-results/
+__pycache__/
+.venv/
+.DS_Store
+powerbi/data/
+powerbi/**/.pbi/
+data/source.zip

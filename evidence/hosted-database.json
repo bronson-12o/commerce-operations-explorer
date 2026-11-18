@@ -1,0 +1,10 @@
+{
+  "provider": "Neon",
+  "plan": "Free",
+  "postgres_version": 18,
+  "orders": 99441,
+  "delivered_merchandise_value": "13221498.11",
+  "database_bytes": 248610816,
+  "raw_schema_uploaded": false,
+  "reader_verified": true
+}

@@ -1,0 +1,40 @@
+{
+  "verified_at": "2026-11-18T08:22:50.3979688-08:00",
+  "method": "Actual running Power BI Desktop Analysis Services model via TOM/ADOMD",
+  "refreshed": false,
+  "tables": 10,
+  "relationships": 15,
+  "all": [
+    {
+      "[Orders]": 99441,
+      "[Delivered]": 96478,
+      "[Merchandise]": 13221498.11,
+      "[Freight]": 2198275.64,
+      "[Eligible]": 96470,
+      "[Late]": 6534,
+      "[OnTime]": 0.9322690992018244
+    }
+  ],
+  "filtered_sp_2017": [
+    {
+      "[Merchandise]": 2136258.96,
+      "[Orders]": 17760
+    }
+  ],
+  "pbix_save_reopen_verified": true,
+  "refresh_before_save_verified": true,
+  "verification_sequence": [
+    "Opened editable PBIP in Desktop",
+    "Full refresh of actual Desktop model",
+    "All-data and SP 2017 DAX reconciled to SQL",
+    "Saved PBIX through Desktop Save As",
+    "Reopened saved PBIX in Desktop",
+    "Queried imported model without refreshing; controls still matched"
+  ],
+  "pbix_sha256": "26f63b6afab6d854496e76f7ccc37a1d83a4887a037f700735c15e5fffa8c62a",
+  "pbix_bytes": 30494563,
+  "visual_review": {
+    "sales_overview": "verified after reopen",
+    "remaining_pages": "schema validated; visual review pending"
+  }
+}

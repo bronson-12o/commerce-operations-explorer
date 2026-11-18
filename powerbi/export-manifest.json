@@ -1,0 +1,47 @@
+{
+  "data_version": "ca930db9b5cfd6ac",
+  "tables": {
+    "Orders": {
+      "file": "fact_order.csv",
+      "sha256": "a42ca527f9f7827e52b0530864d1a1dbac83aa7e5694092d6d05dcc104c9a914"
+    },
+    "OrderItems": {
+      "file": "fact_order_item.csv",
+      "sha256": "7fc095a463d920c9df558f74ce015f7e4649943ee21dfa50e7ee69435d3c571b"
+    },
+    "Payments": {
+      "file": "fact_payment.csv",
+      "sha256": "1ab67866cfe1b0ac228d8c732606c8f0338c7aab947965452c1ad3165dde195e"
+    },
+    "Dates": {
+      "file": "dim_date.csv",
+      "sha256": "74e1ad15f4296c8d592a16de5fda3415daa222b71044f5a5f479ce276fb01470"
+    },
+    "Customers": {
+      "file": "dim_customer.csv",
+      "sha256": "dbd42009623389c4dbdeca55fe8248f66a1fd7fbee8f56b71bda481a9a2acbc9"
+    },
+    "Products": {
+      "file": "dim_product.csv",
+      "sha256": "6b6a99604bfc09b07aacc4d3cae83dfa2c622fd755d3fb68043bf1274e7e335b"
+    },
+    "Sellers": {
+      "file": "dim_seller.csv",
+      "sha256": "061f9ffe49d512ec31ba6ab64a19f0155432d3a6d51aab38e770ac462969a013"
+    },
+    "Geography": {
+      "file": "dim_geography.csv",
+      "sha256": "e5705b31a51214a6c382b8ef1d4e3343fba1731b6d8f229e44a03b08fd85d0bc"
+    },
+    "PaymentTypes": {
+      "file": "dim_payment_type.csv",
+      "sha256": "579839a0823ab2e64a7346cb3de12a7009a55cb3dc6ed3d340c97944e3daf2b2"
+    },
+    "OrderStatuses": {
+      "file": "dim_order_status.csv",
+      "sha256": "480930770d196fb4eade65519c0183a1f52dfc5408494055c74dededfda0d80a"
+    }
+  },
+  "status": "Actual Desktop refresh, PBIX save/reopen, and all-data/SP 2017 DAX verified",
+  "powerbi_source_folder": "C:\\Users\\Bronson\\Documents\\CommerceExplorer\\data"
+}

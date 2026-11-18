@@ -1,0 +1,78 @@
+{
+  "executedAt": "2026-11-18T16:24:31.374Z",
+  "passed": 18,
+  "checks": [
+    {
+      "name": "Original CSV control totals match analytical tables",
+      "passed": true
+    },
+    {
+      "name": "All six registered queries execute with bound parameters",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: ' OR '1'='1",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: '; DROP TABLE core.orders; --",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: x' UNION SELECT current_user --",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: ' OR pg_sleep(5) IS NULL --",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: <img src=x onerror=alert(1)>",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: O'Brien",
+      "passed": true
+    },
+    {
+      "name": "Text remains a bound literal: 50%_discount",
+      "passed": true
+    },
+    {
+      "name": "Sort injection rejected before database execution",
+      "passed": true
+    },
+    {
+      "name": "Unknown query, unexpected fields, dates, and unbounded pagination rejected",
+      "passed": true
+    },
+    {
+      "name": "Oversized body and malformed JSON rejected",
+      "passed": true
+    },
+    {
+      "name": "Security headers present on API responses",
+      "passed": true
+    },
+    {
+      "name": "Database runtime role cannot modify records or access raw data",
+      "passed": true
+    },
+    {
+      "name": "Readiness and disabled-service behavior are explicit",
+      "passed": true
+    },
+    {
+      "name": "Rate limiting returns 429 without executing query",
+      "passed": true
+    },
+    {
+      "name": "Aggregate cache avoids database calls, isolates filters, expires, and excludes detail",
+      "passed": true
+    },
+    {
+      "name": "Separate payment aggregates prevent item/payment join fan-out",
+      "passed": true
+    }
+  ]
+}

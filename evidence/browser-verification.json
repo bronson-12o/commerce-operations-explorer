@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-11-18T16:24:29.356362+00:00",
+  "method": "CUA browser interactions and DOM inspection against actual local PostgreSQL",
+  "passed": [
+    "Desktop overview, orders, sales and delivery navigation",
+    "Order status filter and detail items/payments",
+    "Date input and region controls produce SP 2017 order count 17760",
+    "Reflected XSS renders literally without an image element",
+    "Stored malicious geography renders literally without an image element",
+    "Legitimate apostrophe search returns actual fixture records",
+    "Order dialog retains backward Tab focus and closes with Escape"
+  ],
+  "stored_fixture_rolled_back": true,
+  "limitations": [
+    "Requested mobile viewport remained 1280px; mobile layout not verified.",
+    "No claim of complete accessibility or universal XSS immunity."
+  ]
+}

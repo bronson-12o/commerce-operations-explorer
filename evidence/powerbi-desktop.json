@@ -1,5 +1,5 @@
 {
-  "verified_at": "2026-11-18T08:22:50.3979688-08:00",
+  "verified_at": "2026-11-18T11:40:09.1497855-08:00",
   "method": "Actual running Power BI Desktop Analysis Services model via TOM/ADOMD",
   "refreshed": false,
   "tables": 10,
@@ -24,18 +24,12 @@
   "pbix_save_reopen_verified": true,
   "refresh_before_save_verified": true,
   "verification_sequence": [
-    "Opened editable PBIP in Desktop",
-    "Full refresh of actual Desktop model",
-    "All-data and SP 2017 DAX reconciled to SQL",
-    "Saved PBIX through Desktop Save As",
-    "Reopened saved PBIX in Desktop",
-    "Queried imported model without refreshing; controls still matched"
+    "Recolored editable PBIR and validated its 27 files",
+    "Opened and refreshed in Power BI Desktop",
+    "Reconciled full data and S\u00e3o Paulo 2017 totals",
+    "Saved PBIX in Desktop and reopened",
+    "Queried its imported model without refreshing"
   ],
-  "pbix_sha256": "26f63b6afab6d854496e76f7ccc37a1d83a4887a037f700735c15e5fffa8c62a",
-  "pbix_bytes": 30494563,
-  "visual_review": {
-    "sales_overview": "verified after reopen",
-    "delivery_reviews": "verified after reopen",
-    "definitions_coverage": "verified after reopen"
-  }
+  "pbix_sha256": "b73d49b6e92e1a3b70ed4d264eab0543021a7e78c385bd594d2ddf682624a4c4",
+  "pbix_bytes": 30494955
 }

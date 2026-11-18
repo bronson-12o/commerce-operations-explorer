@@ -21,11 +21,11 @@ import {
   ExternalLink,
   RefreshCw,
   X,
-  Menu,
   Info,
   Clock,
   FileText,
 } from "lucide-react";
+import { BuildGallery } from "./build-gallery";
 import "./style.css";
 type Row = Record<string, any>;
 type Result = {
@@ -61,6 +61,7 @@ const sections = [
   { id: "sales", name: "Sales analysis", icon: ChartNoAxesCombined },
   { id: "delivery", name: "Delivery analysis", icon: Truck },
   { id: "engineering", name: "Engineering", icon: Database },
+  { id: "process", name: "How it was built", icon: FileText },
 ];
 const initial = new URLSearchParams(location.search);
 async function request(id: string, filters: Row): Promise<Result> {
@@ -169,8 +170,8 @@ function TrendChart({ rows }: { rows: Row[] }) {
       >
         <defs>
           <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#21816b" stopOpacity=".18" />
-            <stop offset="100%" stopColor="#21816b" stopOpacity=".01" />
+            <stop offset="0%" stopColor="#4059d8" stopOpacity=".18" />
+            <stop offset="100%" stopColor="#4059d8" stopOpacity=".01" />
           </linearGradient>
         </defs>
         {[0, 0.25, 0.5, 0.75, 1].map((n) => (
@@ -180,7 +181,7 @@ function TrendChart({ rows }: { rows: Row[] }) {
               x2={w - r}
               y1={y(max * n)}
               y2={y(max * n)}
-              stroke="#e8ece9"
+              stroke="#dce0f4"
               strokeDasharray="3 5"
             />
             <text
@@ -197,7 +198,7 @@ function TrendChart({ rows }: { rows: Row[] }) {
         <path
           d={line}
           fill="none"
-          stroke="#237e69"
+          stroke="#344dc9"
           strokeWidth="2.5"
           strokeLinejoin="round"
         />
@@ -223,8 +224,8 @@ function TrendChart({ rows }: { rows: Row[] }) {
             />
             {hover === i && (
               <>
-                <line x1={x(i)} x2={x(i)} y1={t} y2={h - b} stroke="#9fbcb3" />
-                <circle cx={x(i)} cy={y(vals[i])} r="4" fill="#165c4e" />
+                <line x1={x(i)} x2={x(i)} y1={t} y2={h - b} stroke="#909cdf" />
+                <circle cx={x(i)} cy={y(vals[i])} r="4" fill="#263cad" />
               </>
             )}
           </g>
@@ -252,7 +253,7 @@ function CategoryBars({ rows }: { rows: Row[] }) {
             <span
               style={{
                 width: `${(Number(r.merchandise_value) / max) * 100}%`,
-                background: i === 0 ? "#247c65" : "#b5cdc2",
+                background: i === 0 ? "#b34e37" : "#dc9d86",
               }}
             />
           </div>
@@ -280,7 +281,6 @@ function App() {
   const [start, setStart] = useState(initial.get("start") || "2016-09-01");
   const [end, setEnd] = useState(initial.get("end") || "2018-10-31");
   const [state, setState] = useState(initial.get("state") || "ALL");
-  const [mobile, setMobile] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [catalog, setCatalog] = useState<Row>();
   const filters = useMemo(() => ({ start, end, state }), [start, end, state]);
@@ -302,18 +302,17 @@ function App() {
   }, [section, start, end, state]);
   const nav = (id: string) => {
     setSection(id);
-    setMobile(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const sum = (k: string) =>
     monthly.data?.rows.reduce((s, r) => s + Number(r[k] ?? 0), 0) ?? 0;
   const titles: Row = {
     overview: [
-      "Business overview",
-      "A clear view of sales, orders, and delivery performance.",
+      "Inside Brazil’s Olist marketplace",
+      "Explore 99,441 historical orders, from purchase to delivery.",
     ],
     orders: [
-      "Order workspace",
+      "Order explorer",
       "Follow an order from purchase through delivery.",
     ],
     sales: [
@@ -323,6 +322,10 @@ function App() {
     delivery: [
       "Delivery performance",
       "Explore delivery timing and customer-review coverage.",
+    ],
+    process: [
+      "How it was built",
+      "Screenshots from PostgreSQL, the data pipeline, and Power BI Desktop.",
     ],
     engineering: [
       "Behind the application",
@@ -335,122 +338,57 @@ function App() {
       <a href="#main" className="skip">
         Skip to content
       </a>
-      <aside className={mobile ? "sidebar open" : "sidebar"}>
-        <a
-          className="brand"
-          href="?view=overview"
-          onClick={(e) => {
-            e.preventDefault();
-            nav("overview");
-          }}
-        >
-          <div className="brand-mark">
-            <Layers size={23} />
-          </div>
-          <span>
-            Commerce<span>OPERATIONS EXPLORER</span>
-          </span>
-        </a>
-        <div className="nav-label">WORKSPACE</div>
-        <nav aria-label="Main navigation">
-          {sections.slice(0, 4).map((s) => (
-            <button
-              key={s.id}
-              className={section === s.id ? "nav-item active" : "nav-item"}
-              onClick={() => nav(s.id)}
-              aria-current={section === s.id ? "page" : undefined}
-            >
-              <s.icon size={18} />
-              {s.name}
-              {section === s.id && <span className="nav-dot" />}
-            </button>
-          ))}
-        </nav>
-        <div className="nav-label separated">PROJECT</div>
-        <button
-          className={section === "engineering" ? "nav-item active" : "nav-item"}
-          onClick={() => nav("engineering")}
-        >
-          <Database size={18} />
-          Engineering
-        </button>
-        <a
-          className="nav-item"
-          href="/downloads/data-dictionary.html"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <FileText size={18} />
-          Data & definitions
-          <ArrowUpRight size={13} />
-        </a>
-        <div className="sidebar-bottom">
-          <div className="dataset-label">
-            <span className="pulse" />
-            Historical dataset
-          </div>
-          <p>
-            Olist commerce data
-            <br />
-            Brazil · 2016–2018
-          </p>
-          <div className="author">
-            <div className="avatar">BH</div>
-            <div>
-              Bronson Hatch<small>Independent project</small>
-            </div>
-          </div>
-        </div>
-      </aside>
-      <div className="main-shell">
-        <header className="topbar">
-          <button
-            className="mobile-menu"
-            aria-label="Toggle navigation"
-            onClick={() => setMobile(!mobile)}
+      <header className="masthead">
+        <div className="masthead-inner">
+          <a
+            className="masthead-brand"
+            href="?view=overview"
+            onClick={(event) => {
+              event.preventDefault();
+              nav("overview");
+            }}
           >
-            <Menu size={22} />
-          </button>
-          <div className="breadcrumb">
-            Workspace <ChevronRight size={12} />
-            <strong>
-              {section === "engineering"
-                ? "Engineering"
-                : section === "overview"
-                  ? "Overview"
-                  : title[0]}
-            </strong>
-          </div>
-          <div className="top-actions">
-            <span className="live">
-              <i />
-              PostgreSQL
+            <Layers size={24} />
+            <span>
+              Commerce <strong>Operations Explorer</strong>
             </span>
-            <a
-              href="/downloads/case-study.html"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Project notes <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </header>
+          </a>
+          <nav aria-label="Main navigation" className="chapter-nav">
+            {sections.map(({ id, name }) => (
+              <button
+                key={id}
+                onClick={() => nav(id)}
+                aria-current={section === id ? "page" : undefined}
+              >
+                {name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+      <div className="main-shell">
         <main id="main">
-          <div className="page-heading">
+          <div
+            className={
+              section === "overview"
+                ? "page-heading report-intro"
+                : "page-heading"
+            }
+          >
             <div>
-              <div className="eyebrow">COMMERCE INTELLIGENCE</div>
+              {section === "overview" && (
+                <p className="report-kicker">Olist · Brazil · 2016–2018</p>
+              )}
               <h1>{title[0]}</h1>
               <p>{title[1]}</p>
             </div>
-            <button
-              className="button secondary"
-              onClick={() => nav("engineering")}
-            >
-              <Download size={15} />
-              Project downloads
-            </button>
+            {section === "overview" && (
+              <button className="process-link" onClick={() => nav("process")}>
+                See how it was built <ArrowUpRight size={17} />
+              </button>
+            )}
           </div>
-          {section !== "engineering" && (
+          {section !== "engineering" && section !== "process" && (
             <>
               <div className="filterbar">
                 <div className="period">
@@ -613,7 +551,6 @@ function App() {
                       <h2>Merchandise over time</h2>
                       <p>Delivered orders by purchase month</p>
                     </div>
-                    <span className="small-badge">Monthly</span>
                   </div>
                   {monthly.loading || monthly.error ? (
                     <Empty loading={monthly.loading} error={monthly.error} />
@@ -653,21 +590,23 @@ function App() {
                   </div>
                 </section>
               </div>
-              <section className="panel">
-                <div className="panel-heading">
-                  <div>
-                    <h2>Recent orders</h2>
-                    <p>Latest purchases in the selected period</p>
-                  </div>
-                  <button className="text-button" onClick={() => nav("orders")}>
-                    View all orders <ArrowRight size={14} />
-                  </button>
-                </div>
-                <Orders
-                  filters={filters}
-                  compact
-                  onNavigate={() => nav("orders")}
-                />
+              <section className="report-paths" aria-label="Explore more">
+                <button onClick={() => nav("orders")}>
+                  <ShoppingBag size={20} />
+                  <span>
+                    <strong>Trace an order</strong>
+                    <small>Inspect items, payments, and delivery.</small>
+                  </span>
+                  <ArrowRight size={18} />
+                </button>
+                <button onClick={() => nav("delivery")}>
+                  <Truck size={20} />
+                  <span>
+                    <strong>Compare delivery</strong>
+                    <small>Explore timing and reviews by state.</small>
+                  </span>
+                  <ArrowRight size={18} />
+                </button>
               </section>
               <div className="context-note">
                 <Info size={15} />
@@ -689,6 +628,7 @@ function App() {
           )}
           {section === "delivery" && <Delivery filters={filters} />}
           {section === "engineering" && <Engineering catalog={catalog} />}
+          {section === "process" && <BuildGallery />}
           <footer>
             <span>
               Commerce Operations Explorer <span className="footer-sep">/</span>{" "}
@@ -707,15 +647,7 @@ function App() {
     </div>
   );
 }
-function Orders({
-  filters,
-  compact = false,
-  onNavigate,
-}: {
-  filters: Row;
-  compact?: boolean;
-  onNavigate?: () => void;
-}) {
+function Orders({ filters }: { filters: Row }) {
   const [search, setSearch] = useState("");
   const [draft, setDraft] = useState("");
   const [status, setStatus] = useState("all");
@@ -727,7 +659,7 @@ function Orders({
     search,
     status,
     sort,
-    limit: compact ? 6 : 50,
+    limit: 50,
     offset,
   });
   useEffect(
@@ -736,59 +668,57 @@ function Orders({
   );
   return (
     <>
-      {!compact && (
-        <form
-          className="order-tools"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setSearch(draft);
-            setOffset(0);
-          }}
+      <form
+        className="order-tools"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSearch(draft);
+          setOffset(0);
+        }}
+      >
+        <label className="search-field">
+          <Search size={16} />
+          <input
+            aria-label="Search city"
+            placeholder="Search customer city…"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+          />
+        </label>
+        <button className="button primary" type="submit">
+          Search
+        </button>
+        <select
+          aria-label="Order status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
         >
-          <label className="search-field">
-            <Search size={16} />
-            <input
-              aria-label="Search city"
-              placeholder="Search customer city…"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-            />
-          </label>
-          <button className="button primary" type="submit">
-            Search
-          </button>
-          <select
-            aria-label="Order status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="all">All statuses</option>
-            {[
-              "delivered",
-              "shipped",
-              "canceled",
-              "unavailable",
-              "invoiced",
-              "processing",
-              "approved",
-              "created",
-            ].map((x) => (
-              <option value={x} key={x}>
-                {label(x)}
-              </option>
-            ))}
-          </select>
-          <select
-            aria-label="Sort orders"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="value">Highest item value</option>
-          </select>
-        </form>
-      )}
+          <option value="all">All statuses</option>
+          {[
+            "delivered",
+            "shipped",
+            "canceled",
+            "unavailable",
+            "invoiced",
+            "processing",
+            "approved",
+            "created",
+          ].map((x) => (
+            <option value={x} key={x}>
+              {label(x)}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label="Sort orders"
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="value">Highest item value</option>
+        </select>
+      </form>
       {q.loading || q.error ? (
         <Empty loading={q.loading} error={q.error} />
       ) : q.data?.rows.length ? (
@@ -845,26 +775,24 @@ function Orders({
       ) : (
         <Empty />
       )}
-      {!compact && (
-        <div className="pagination">
-          <span>
-            {number(q.data?.rows.length ?? 0)} records shown · page{" "}
-            {offset / 50 + 1}
-          </span>
-          <button
-            disabled={!offset}
-            onClick={() => setOffset(Math.max(0, offset - 50))}
-          >
-            Previous
-          </button>
-          <button
-            disabled={(q.data?.rows.length ?? 0) < 50 || offset >= 5000}
-            onClick={() => setOffset(offset + 50)}
-          >
-            Next
-          </button>
-        </div>
-      )}
+      <div className="pagination">
+        <span>
+          {number(q.data?.rows.length ?? 0)} records shown · page{" "}
+          {offset / 50 + 1}
+        </span>
+        <button
+          disabled={!offset}
+          onClick={() => setOffset(Math.max(0, offset - 50))}
+        >
+          Previous
+        </button>
+        <button
+          disabled={(q.data?.rows.length ?? 0) < 50 || offset >= 5000}
+          onClick={() => setOffset(offset + 50)}
+        >
+          Next
+        </button>
+      </div>
       <QueryDetails data={q.data} />
       {orderId && <OrderDrawer id={orderId} onClose={() => setOrderId("")} />}
     </>
@@ -1529,7 +1457,7 @@ function Engineering({ catalog }: { catalog?: Row }) {
               [
                 "Power BI report",
                 "Desktop-verified PBIX with imported data; opens without database credentials.",
-                "https://github.com/bronson-12o/commerce-operations-explorer/releases/download/v0.1.0/Commerce_Operations_Explorer.pbix",
+                "https://github.com/bronson-12o/commerce-operations-explorer/releases/download/v0.2.0/Commerce_Operations_Explorer.pbix",
               ],
               [
                 "Source code",

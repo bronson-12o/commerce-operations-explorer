@@ -62,7 +62,7 @@ export function makeApp(database: (env: Bindings) => Database, now = Date.now) {
     c.header("X-Frame-Options", "DENY");
     if (c.req.path.startsWith("/api/")) c.header("Cache-Control", "no-store");
   });
-  app.get("/api/v1/health", (c) => c.json({ status: "ok", release: "0.1.0" }));
+  app.get("/api/v1/health", (c) => c.json({ status: "ok", release: "0.2.0" }));
   app.get("/api/v1/ready", async (c) => {
     try {
       await database(c.env ?? {}).query("SELECT 1 AS ready");
@@ -86,7 +86,7 @@ export function makeApp(database: (env: Bindings) => Database, now = Date.now) {
       };
       return c.json({
         queries: descriptions,
-        release: "0.1.0",
+        release: "0.2.0",
         dataVersion: release.version,
         loadedAt: release.loaded_at,
         source: "Olist, 2016–2018",
@@ -185,7 +185,7 @@ export function makeApp(database: (env: Bindings) => Database, now = Date.now) {
       }
       const meta = {
         requestId,
-        release: "0.1.0",
+        release: "0.2.0",
         dataVersion: releaseInfo.version,
         source: "live",
         rowCount: rows.length,

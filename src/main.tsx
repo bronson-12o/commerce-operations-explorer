@@ -25,7 +25,7 @@ import {
   Clock,
   FileText,
 } from "lucide-react";
-import { BuildGallery } from "./build-gallery";
+import { BuildGallery, portfolioReportUrl } from "./build-gallery";
 import "./style.css";
 type Row = Record<string, any>;
 type Result = {
@@ -1455,9 +1455,9 @@ function Engineering({ catalog }: { catalog?: Row }) {
           <div className="downloads">
             {[
               [
-                "Power BI report",
-                "Desktop-verified PBIX with imported data; opens without database credentials.",
-                "https://github.com/bronson-12o/commerce-operations-explorer/releases/download/v0.2.0/Commerce_Operations_Explorer.pbix",
+                "Interactive report",
+                "Explore verified sales and delivery results in your browser.",
+                portfolioReportUrl,
               ],
               [
                 "Source code",

@@ -75,6 +75,8 @@ Aggregate responses use a per-instance, 100-entry, 60-second cache keyed by the 
 
 ## Power BI
 
+[Explore the interactive sales and delivery report on BronsonHatch.com](https://bronsonhatch.com/#work/commerce-operations-explorer/screenshots). The portfolio version uses the verified Power BI snapshot and opens in a browser without a workbook download.
+
 `powerbi/` contains the supported PBIP/PBIR project, a JSON semantic model, ten analytical tables, seventeen DAX measures, and single-direction relationships. Regenerate exports with `.venv/bin/python scripts/powerbi.py`. Change the SourceFolder parameter to your extracted `data` folder before refreshing. The authored defaults point to the project's Windows VM folder.
 
 Schema validation and actual Desktop verification are separate. Consult release evidence for refresh/save/reopen and DAX reconciliation status. No hosted database credentials are included in the report. Do not publish a candidate as a verified PBIX before its Desktop checks pass.
@@ -93,4 +95,4 @@ Bronson Hatch is the project owner. Codex assisted with implementation, testing,
 
 Original application code: MIT, see LICENSE. Data: Olist, Brazilian E-Commerce Public Dataset, https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce, CC BY-NC-SA 4.0. Data and derived data retain their applicable attribution/noncommercial/share-alike terms; the code license does not relicense the dataset.
 
-Power BI text formatting follows [Microsoft PBIR textbox guidance](https://github.com/microsoft/skills-for-fabric/blob/main/skills/powerbi-report-cli/references/authoring/textbox.md). The distributed PBIX is saved by Desktop, not assembled by editing the PBIX archive.
+Power BI text formatting follows [Microsoft PBIR textbox guidance](https://github.com/microsoft/skills-for-fabric/blob/main/skills/powerbi-report-cli/references/authoring/textbox.md).

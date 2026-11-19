@@ -1,3 +1,6 @@
+export const portfolioReportUrl =
+  "https://bronsonhatch.com/#work/commerce-operations-explorer/screenshots";
+
 const captures = [
   {
     file: "postgresql-star-schema",
@@ -58,9 +61,7 @@ export function BuildGallery() {
         <a href="https://github.com/bronson-12o/commerce-operations-explorer">
           SQL, tests, and report source
         </a>
-        <a href="https://github.com/bronson-12o/commerce-operations-explorer/releases/download/v0.2.0/Commerce_Operations_Explorer.pbix">
-          Download Power BI report
-        </a>
+        <a href={portfolioReportUrl}>Explore the report in your browser</a>
       </div>
     </>
   );

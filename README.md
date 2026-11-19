@@ -4,7 +4,7 @@ An independent commerce analysis application by Bronson Hatch. Explore historica
 
 The data is anonymized Olist commerce activity from 2016–2018. This is a self-directed historical-data project, not an Olist engagement or an operating retailer. Application requests use live database queries with a bounded 60-second aggregate cache; the source period is historical.
 
-[How it was built](https://commerce-operations-explorer-bronson.bronsonohatch.chatgpt.site/?view=process) includes screenshots of the PostgreSQL keys and row counts, a walkthrough reconstructed from the project SQL and current verification results, and Power BI Desktop captures.
+The [portfolio case study](https://bronsonhatch.com/#work/commerce-operations-explorer/build) includes PostgreSQL schema screenshots, a walkthrough of the SQL and verification results, and Power BI Desktop captures.
 
 ## Start locally
 

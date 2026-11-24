@@ -1,6 +1,6 @@
 # Commerce Operations Explorer
 
-An independent commerce analysis application by Bronson Hatch. Explore historical orders, delivered merchandise value, seller/category activity, delivery timing, and customer-review coverage. PostgreSQL is the record of truth; the web application and Power BI use the same defined analytical model.
+Reliable sales and delivery reporting from historical marketplace records. I built this independent project to keep orders, items, and payments at the correct grain, reconcile the measures to source data, and make operational comparisons easier to inspect. PostgreSQL, the web application, and Power BI use the same defined analytical model.
 
 The data is anonymized Olist commerce activity from 2016–2018. This is a self-directed historical-data project, not an Olist engagement or an operating retailer. Application requests use live database queries with a bounded 60-second aggregate cache; the source period is historical.
 

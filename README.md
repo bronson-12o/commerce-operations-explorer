@@ -1,5 +1,39 @@
 # Commerce Operations Explorer
 
+Trace a commerce question from source records to SQL and a visual answer.
+
+## The problem
+
+A dashboard total is easier to trust when its grain, exclusions and source rows are inspectable. This project uses PostgreSQL as the record of truth for both the web explorer and Power BI.
+
+## How it works
+
+![Simplified project architecture](docs/presentation/system-overview.svg)
+
+The diagram summarizes the documented workflow; it is not a performance result or a generated application screenshot.
+
+## A view of the project
+
+![Commerce Operations Explorer — existing project image](public/build-gallery/postgresql-star-schema.jpg)
+
+Existing PostgreSQL schema capture; use the accompanying SQL and validation records to inspect the model.
+
+## Run or inspect the work
+
+Start with the local setup below: Docker Compose, Python 3.12 and Node 22+. [The portfolio case](https://bronsonhatch.com/#work/commerce-operations-explorer) shows the database, query checks and Power BI model. Use only this project's isolated database for verification.
+
+## Evidence and scope
+
+The November 22, 2026 fresh-copy audit downloaded the public source archive, matched its nine release hashes, loaded an isolated database and passed eight data checks, eighteen API checks and desktop/mobile workflows. These are engineering checks on historical data, not a commercial engagement.
+
+Historical merchandise value is not net profit, and review coverage is not a customer-satisfaction census. The application's definitions, cache boundary, publisher license and data exclusions remain in the reference below.
+
+<details>
+
+<summary>Detailed setup, original screenshots and project reference</summary>
+
+# Commerce Operations Explorer
+
 An independent commerce analysis application by Bronson Hatch. Explore historical orders, delivered merchandise value, seller/category activity, delivery timing, and customer-review coverage. PostgreSQL is the record of truth; the web application and Power BI use the same defined analytical model.
 
 The data is anonymized Olist commerce activity from 2016–2018. This is a self-directed historical-data project, not an Olist engagement or an operating retailer. Application requests use live database queries with a bounded 60-second aggregate cache; the source period is historical.
@@ -96,3 +130,5 @@ Bronson Hatch is the project owner. Codex assisted with implementation, testing,
 Original application code: MIT, see LICENSE. Data: Olist, Brazilian E-Commerce Public Dataset, https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce, CC BY-NC-SA 4.0. Data and derived data retain their applicable attribution/noncommercial/share-alike terms; the code license does not relicense the dataset.
 
 Power BI text formatting follows [Microsoft PBIR textbox guidance](https://github.com/microsoft/skills-for-fabric/blob/main/skills/powerbi-report-cli/references/authoring/textbox.md).
+
+</details>
